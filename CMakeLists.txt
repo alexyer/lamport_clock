@@ -3,7 +3,7 @@ project(lamport_clock)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include(include/lamport_clock.h)
+include_directories(include)
 
 add_library(lamport_clock INTERFACE)
 add_subdirectory(tests)
