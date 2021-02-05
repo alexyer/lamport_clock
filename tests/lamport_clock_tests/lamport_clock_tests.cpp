@@ -25,5 +25,8 @@ TEST(LamportClock_Test, ReceiveEvent) {
     ASSERT_EQ(clock.get_time(), 4);
 
     clock.receive_event(2);
-    ASSERT_EQ(clock.get_time(), 4);
+    ASSERT_EQ(clock.get_time(), 5);
+
+    clock.receive_event(5);
+    ASSERT_EQ(clock.get_time(), 6);
 }

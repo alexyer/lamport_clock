@@ -3,7 +3,8 @@
 
 #include <atomic>
 
-class LamportClock {
+class LamportClock
+{
 public:
     /// Lamport timestamp
     typedef unsigned int LamportTime;
@@ -15,7 +16,8 @@ public:
      *
      * @return LamportTime value.
      */
-    LamportTime get_time() const {
+    LamportTime get_time() const
+    {
         return time_.load();
     }
 
@@ -25,7 +27,8 @@ public:
      *
      * @return LamportTime value;
      */
-    LamportTime local_event() {
+    LamportTime local_event()
+    {
         return time_.fetch_add(1);
     }
 
@@ -35,7 +38,8 @@ public:
      *
      * @return LamportTime value;
      */
-    LamportTime send_event() {
+    LamportTime send_event()
+    {
         return time_.fetch_add(1);
     }
 
@@ -46,18 +50,21 @@ public:
      * @param received_time Sender's time.
      * @return LamportTime value;
      */
-    LamportTime receive_event(LamportTime received_time) {
-        RECEIVE_EVENT:
+    LamportTime receive_event(LamportTime received_time)
+    {
+    RECEIVE_EVENT:
 
         auto cur = get_time();
 
-        // If received time is old, do nothing.
-        if (received_time < cur) {
-            return cur;
+        // If received time is old, current time is max(current, receive).
+        if (received_time < cur)
+        {
+            return time_.fetch_add(1);
         }
 
         // Ensure that local timer is at least one ahead.
-        if (!time_.compare_exchange_strong(cur, received_time + 1)) {
+        if (!time_.compare_exchange_strong(cur, received_time + 1))
+        {
             goto RECEIVE_EVENT;
         }
 
